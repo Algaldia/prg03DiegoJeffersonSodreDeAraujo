@@ -30,3 +30,7 @@ O escopo deste documento abrange as funcionalidades e caracteristicas desse prog
 | Código | Requisito / Aplicação | Descrição |
 | ---: | --- | --- |
 | RNF01 | Aplicação | A Aplicação deve ser leve e rapida |
+
+## DIAGRAMA DE CASOS DE USO
+
+![Caso](ATIVIDADES/ATIVIDADE%2001%20-%20DOCUMENTO%20REQUISITOS/imagem.png)
