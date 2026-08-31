@@ -34,5 +34,3 @@ O escopo deste documento abrange as funcionalidades e caracteristicas desse prog
 ## DIAGRAMA DE CASOS DE USO
 
 ![Caso](ATIVIDADES/ATIVIDADE%2001%20-%20DOCUMENTO%20REQUISITOS/imagem.png)
-
-Alteração do README para atividade 03
