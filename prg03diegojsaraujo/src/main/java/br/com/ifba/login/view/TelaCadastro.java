@@ -4,6 +4,13 @@
  */
 package br.com.ifba.login.view;
 
+import java.awt.Color;
+import java.time.LocalDateTime;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.border.Border;
+import java.util.Arrays;
+
 /**
  *
  * @author guest
@@ -46,8 +53,15 @@ public class TelaCadastro extends javax.swing.JFrame {
         lblSenha = new javax.swing.JLabel();
         lblConfirmarSenha = new javax.swing.JLabel();
         boxGenero = new javax.swing.JComboBox<>();
-        boxGenero1 = new javax.swing.JComboBox<>();
+        boxCargo = new javax.swing.JComboBox<>();
         btnCriarConta = new javax.swing.JButton();
+        txtNomeErro = new javax.swing.JLabel();
+        txtCpfErro = new javax.swing.JLabel();
+        txtNascimentoErro = new javax.swing.JLabel();
+        txtTelefoneErro = new javax.swing.JLabel();
+        txtLoginErro = new javax.swing.JLabel();
+        txtSenhaErro = new javax.swing.JLabel();
+        txtConfirmaSenhaErro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,13 +110,29 @@ public class TelaCadastro extends javax.swing.JFrame {
         boxGenero.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         boxGenero.setMaximumRowCount(2);
         boxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Feminino" }));
+        boxGenero.addActionListener(this::boxGeneroActionPerformed);
 
-        boxGenero1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
-        boxGenero1.setMaximumRowCount(3);
-        boxGenero1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gerente", "Estoquista", "Repositor" }));
+        boxCargo.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        boxCargo.setMaximumRowCount(3);
+        boxCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gerente", "Estoquista", "Repositor" }));
 
         btnCriarConta.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         btnCriarConta.setText("Criar Conta");
+        btnCriarConta.addActionListener(this::btnCriarContaActionPerformed);
+
+        txtNomeErro.setForeground(new java.awt.Color(255, 0, 0));
+
+        txtCpfErro.setForeground(new java.awt.Color(255, 0, 0));
+
+        txtNascimentoErro.setForeground(new java.awt.Color(255, 0, 0));
+
+        txtTelefoneErro.setForeground(new java.awt.Color(255, 0, 0));
+
+        txtLoginErro.setForeground(new java.awt.Color(255, 0, 0));
+
+        txtSenhaErro.setForeground(new java.awt.Color(255, 0, 0));
+
+        txtConfirmaSenhaErro.setForeground(new java.awt.Color(255, 0, 0));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -124,19 +154,40 @@ public class TelaCadastro extends javax.swing.JFrame {
                             .addComponent(lblConfirmarSenha))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtConfirmarSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtConfirmarSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtConfirmaSenhaErro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtSenhaErro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtLoginErro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtTelefoneErro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(318, 318, 318)
+                                .addComponent(txtNascimentoErro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtNomeErro))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtCpfErro))
                             .addComponent(boxGenero, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(boxGenero1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(boxCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(346, 346, 346)
                         .addComponent(btnCriarConta)))
-                .addContainerGap(243, Short.MAX_VALUE))
+                .addContainerGap(185, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,39 +195,47 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addGap(107, 107, 107)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNome)
-                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNomeErro))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCpf)
-                    .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCpfErro))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGenero)
                     .addComponent(boxGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNascimento))
+                    .addComponent(txtNascimentoErro)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblNascimento)
+                        .addComponent(txtNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTelefone))
+                    .addComponent(lblTelefone)
+                    .addComponent(txtTelefoneErro))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCargo)
-                    .addComponent(boxGenero1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(boxCargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLogin))
+                    .addComponent(lblLogin)
+                    .addComponent(txtLoginErro))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSenha))
+                    .addComponent(lblSenha)
+                    .addComponent(txtSenhaErro))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtConfirmarSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblConfirmarSenha))
+                    .addComponent(lblConfirmarSenha)
+                    .addComponent(txtConfirmaSenhaErro))
                 .addGap(18, 18, 18)
                 .addComponent(btnCriarConta)
                 .addContainerGap(163, Short.MAX_VALUE))
@@ -201,6 +260,76 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void txtCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCpfActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCpfActionPerformed
+
+    private void btnCriarContaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarContaActionPerformed
+        boolean erro = false;
+        String nome = txtNome.getText();
+        String cpf = txtCpf.getText();
+        String dataNascimento = txtNascimento.getText();
+        String telefone = txtTelefone.getText();
+        String login = txtLogin.getText();
+        char[] senha = txtSenha.getPassword();
+        char[] confirmaSenha = txtConfirmarSenha.getPassword();
+        
+        //Verifica se os campos estão vazios
+        if( nome.isEmpty() ){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtNome.setBorder(border);
+            txtNomeErro.setText("Nome não pode estar vazio!");
+        }
+        if( cpf.isEmpty() ){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtCpf.setBorder(border);
+            txtCpfErro.setText("CPF não pode estar vazio!");
+            erro = true;
+        }
+        if( dataNascimento.isEmpty() ){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtNascimento.setBorder(border);
+            txtNascimentoErro.setText("<html>Data de Nascimento<br> não pode estar vazio!</html>");
+            erro = true;
+        }
+        if( telefone.isEmpty() ){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtTelefone.setBorder(border);
+            txtTelefoneErro.setText("Telefone não pode estar vazio!");
+            erro = true;
+        }
+        if( login.isEmpty() ){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtLogin.setBorder(border);
+            txtLoginErro.setText("Login não pode estar vazio!");
+            erro = true;
+        }
+        if( senha.length == 0 ){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtSenha.setBorder(border);
+            txtSenhaErro.setText("Senha não pode estar vazio!");
+            erro = true;
+        }
+        if( confirmaSenha.length == 0){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtConfirmarSenha.setBorder(border);
+            txtConfirmaSenhaErro.setText("Nome não pode estar vazio!");
+            erro = true;
+        }
+        
+        if( !(Arrays.equals(senha, confirmaSenha)) ){
+            txtConfirmaSenhaErro.setText("Senha está diferente do confirma senha!");
+            erro = true;
+        }
+        if(erro){
+            return;
+        }
+        
+        //manda a mensagem que deu certo e fecha a janela.
+        JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
+        TelaCadastro.this.dispose();
+    }//GEN-LAST:event_btnCriarContaActionPerformed
+
+    private void boxGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxGeneroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_boxGeneroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,8 +357,8 @@ public class TelaCadastro extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> boxCargo;
     private javax.swing.JComboBox<String> boxGenero;
-    private javax.swing.JComboBox<String> boxGenero1;
     private javax.swing.JButton btnCriarConta;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCargo;
@@ -241,12 +370,19 @@ public class TelaCadastro extends javax.swing.JFrame {
     private javax.swing.JLabel lblNome;
     private javax.swing.JLabel lblSenha;
     private javax.swing.JLabel lblTelefone;
+    private javax.swing.JLabel txtConfirmaSenhaErro;
     private javax.swing.JPasswordField txtConfirmarSenha;
     private javax.swing.JTextField txtCpf;
+    private javax.swing.JLabel txtCpfErro;
     private javax.swing.JTextField txtLogin;
+    private javax.swing.JLabel txtLoginErro;
     private javax.swing.JTextField txtNascimento;
+    private javax.swing.JLabel txtNascimentoErro;
     private javax.swing.JTextField txtNome;
+    private javax.swing.JLabel txtNomeErro;
     private javax.swing.JPasswordField txtSenha;
+    private javax.swing.JLabel txtSenhaErro;
     private javax.swing.JTextField txtTelefone;
+    private javax.swing.JLabel txtTelefoneErro;
     // End of variables declaration//GEN-END:variables
 }
