@@ -182,6 +182,7 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogarActionPerformed
 
     private void lblCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastrarMouseClicked
+        //Cria a tela de cadastrar funcionario.
         TelaCadastro telaCadastro = new TelaCadastro();
         telaCadastro.setVisible(true);
     }//GEN-LAST:event_lblCadastrarMouseClicked
