@@ -4,6 +4,7 @@
  */
 package br.com.ifba.login.view;
 
+import br.com.ifba.usuario.validar.ValidadorUsuario;
 import java.awt.Color;
 import java.time.LocalDateTime;
 import javax.swing.BorderFactory;
@@ -319,6 +320,14 @@ public class TelaCadastro extends javax.swing.JFrame {
             erro = true;
         }
         if(erro){
+            return;
+        }
+        
+        if(ValidadorUsuario.contemPalavraProibida(login)){
+            JOptionPane.showMessageDialog(null, "Login contém palavra não permitida.", "ERRO!", 0);
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtLogin.setBorder(border);
+            txtLoginErro.setText("<html>Login contém palavra<br> não permitida.</html>");
             return;
         }
         
