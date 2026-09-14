@@ -5,6 +5,7 @@
 package br.com.ifba.login.view;
 
 import br.com.ifba.usuario.validar.ValidadorUsuario;
+import br.com.ifba.usuario.entity.Usuario;
 import java.awt.Color;
 import java.time.LocalDateTime;
 import javax.swing.BorderFactory;
@@ -330,6 +331,17 @@ public class TelaCadastro extends javax.swing.JFrame {
             txtLoginErro.setText("<html>Login contém palavra<br> não permitida.</html>");
             return;
         }
+        
+        //Armazenando no objeto Usuario.
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.nome = nome;
+        novoUsuario.cpf =  cpf;
+        novoUsuario.genero = String.valueOf(boxGenero.getSelectedItem());
+        novoUsuario.dataNascimento = dataNascimento;
+        novoUsuario.telefone = telefone;
+        novoUsuario.cargo = String.valueOf(boxCargo.getSelectedItem());
+        novoUsuario.login = login;
+        novoUsuario.senha = String.valueOf(senha);
         
         //manda a mensagem que deu certo e fecha a janela.
         JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
