@@ -5,6 +5,7 @@
 package br.com.ifba.login.view;
 
 import javax.swing.JOptionPane;
+import br.com.ifba.usuario.entity.Usuario;
 
 /**
  *
@@ -175,10 +176,12 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_txtLoginActionPerformed
 
     private void btnLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogarActionPerformed
-        String login = txtLogin.getText();
-        String senha = txtSenha.getText();
-        lblLogin.setText("LOGIN: " + login);
-        lblSenha.setText("Senha: " + senha);
+        Usuario novoUsuario = new Usuario();
+        
+        novoUsuario.login = txtLogin.getText();
+        novoUsuario.senha = txtSenha.getText();
+        lblLogin.setText("LOGIN: " + novoUsuario.login);
+        lblSenha.setText("SENHA: " + novoUsuario.senha);
     }//GEN-LAST:event_btnLogarActionPerformed
 
     private void lblCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastrarMouseClicked
