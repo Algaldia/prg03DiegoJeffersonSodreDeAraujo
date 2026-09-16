@@ -334,17 +334,17 @@ public class TelaCadastro extends javax.swing.JFrame {
         
         //Armazenando no objeto Usuario.
         Usuario novoUsuario = new Usuario();
-        novoUsuario.nome = nome;
-        novoUsuario.cpf =  cpf;
-        novoUsuario.genero = String.valueOf(boxGenero.getSelectedItem());
-        novoUsuario.dataNascimento = dataNascimento;
-        novoUsuario.telefone = telefone;
-        novoUsuario.cargo = String.valueOf(boxCargo.getSelectedItem());
-        novoUsuario.login = login;
-        novoUsuario.senha = String.valueOf(senha);
+        novoUsuario.setNome(nome);
+        novoUsuario.setCpf(cpf);
+        novoUsuario.setGenero(String.valueOf(boxGenero.getSelectedItem()));
+        novoUsuario.setDataNascimento(dataNascimento);
+        novoUsuario.setTelefone(telefone);
+        novoUsuario.setCargo(String.valueOf(boxCargo.getSelectedItem()));
+        novoUsuario.setLogin(login);
+        novoUsuario.setSenha(String.valueOf(senha));
         
         //manda a mensagem que deu certo e fecha a janela.
-        JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
+        JOptionPane.showMessageDialog(null, "Usuario " + novoUsuario.getNome() + " cadastrado com sucesso!");
         TelaCadastro.this.dispose();
     }//GEN-LAST:event_btnCriarContaActionPerformed
 
