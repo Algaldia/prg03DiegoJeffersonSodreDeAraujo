@@ -178,10 +178,10 @@ public class TelaLogin extends javax.swing.JFrame {
     private void btnLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogarActionPerformed
         Usuario novoUsuario = new Usuario();
         
-        novoUsuario.login = txtLogin.getText();
-        novoUsuario.senha = txtSenha.getText();
-        lblLogin.setText("LOGIN: " + novoUsuario.login);
-        lblSenha.setText("SENHA: " + novoUsuario.senha);
+        novoUsuario.setLogin(txtLogin.getText());
+        novoUsuario.setSenha(txtSenha.getText());
+        lblLogin.setText("LOGIN: " + novoUsuario.getLogin());
+        lblSenha.setText("SENHA: " + novoUsuario.getSenha());
     }//GEN-LAST:event_btnLogarActionPerformed
 
     private void lblCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastrarMouseClicked
