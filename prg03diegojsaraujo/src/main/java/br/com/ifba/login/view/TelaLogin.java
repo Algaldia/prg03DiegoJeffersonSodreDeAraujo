@@ -177,11 +177,17 @@ public class TelaLogin extends javax.swing.JFrame {
 
     private void btnLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogarActionPerformed
         Usuario novoUsuario = new Usuario();
-        
+        Usuario usuarioCadastrado = new Usuario();
         novoUsuario.setLogin(txtLogin.getText());
-        novoUsuario.setSenha(txtSenha.getText());
-        lblLogin.setText("LOGIN: " + novoUsuario.getLogin());
-        lblSenha.setText("SENHA: " + novoUsuario.getSenha());
+        novoUsuario.setSenha(String.valueOf(txtSenha.getPassword()));
+        usuarioCadastrado.setLogin("diego");
+        usuarioCadastrado.setSenha("12345");
+
+        if(novoUsuario.autenticar(usuarioCadastrado.getLogin(), usuarioCadastrado.getSenha())){
+            JOptionPane.showMessageDialog(null, "Acesso Liberado!");
+        }else{
+            JOptionPane.showMessageDialog(null, "Acesso Negado!!");
+        }
     }//GEN-LAST:event_btnLogarActionPerformed
 
     private void lblCadastrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCadastrarMouseClicked
