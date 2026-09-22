@@ -264,87 +264,88 @@ public class TelaCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCpfActionPerformed
 
     private void btnCriarContaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarContaActionPerformed
-        boolean erro = false;
-        String nome = txtNome.getText();
-        String cpf = txtCpf.getText();
-        String dataNascimento = txtNascimento.getText();
-        String telefone = txtTelefone.getText();
-        String login = txtLogin.getText();
-        char[] senha = txtSenha.getPassword();
-        char[] confirmaSenha = txtConfirmarSenha.getPassword();
+
+        boolean erroPreenchidos = false;
+        boolean erroPalavraProibidas = false;
+        boolean erroCompara = false;
         
-        //Verifica se os campos estão vazios
-        if( nome.isEmpty() ){
+        if(ValidadorUsuario.nomePreenchido(txtNome.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtNome.setBorder(border);
             txtNomeErro.setText("Nome não pode estar vazio!");
+            erroPreenchidos = true;
         }
-        if( cpf.isEmpty() ){
+        
+        if(ValidadorUsuario.cpfPreenchido(txtCpf.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtCpf.setBorder(border);
             txtCpfErro.setText("CPF não pode estar vazio!");
-            erro = true;
+            erroPreenchidos = true;
         }
-        if( dataNascimento.isEmpty() ){
+        
+        if(ValidadorUsuario.nascimentoPreenchido(txtCpf.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtNascimento.setBorder(border);
-            txtNascimentoErro.setText("<html>Data de Nascimento<br> não pode estar vazio!</html>");
-            erro = true;
+            txtNascimentoErro.setText("<html>Data de Nascimento<br> não     pode estar vazio!</html>");
+            erroPreenchidos = true;
         }
-        if( telefone.isEmpty() ){
+        
+        if(ValidadorUsuario.telefonePreenchido(txtCpf.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtTelefone.setBorder(border);
             txtTelefoneErro.setText("Telefone não pode estar vazio!");
-            erro = true;
+            erroPreenchidos = true;
         }
-        if( login.isEmpty() ){
+        
+        if(ValidadorUsuario.loginPreenchido(txtCpf.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtLogin.setBorder(border);
             txtLoginErro.setText("Login não pode estar vazio!");
-            erro = true;
+            erroPreenchidos = true;
         }
-        if( senha.length == 0 ){
+        
+        if(ValidadorUsuario.senhaPreenchido(txtCpf.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtSenha.setBorder(border);
             txtSenhaErro.setText("Senha não pode estar vazio!");
-            erro = true;
+            erroPreenchidos = true;
         }
-        if( confirmaSenha.length == 0){
+        
+        if(ValidadorUsuario.confirmaSenhaPreenchido(txtCpf.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtConfirmarSenha.setBorder(border);
             txtConfirmaSenhaErro.setText("Nome não pode estar vazio!");
-            erro = true;
+            erroPreenchidos = true;
         }
         
-        if( !(Arrays.equals(senha, confirmaSenha)) ){
-            txtConfirmaSenhaErro.setText("Senha está diferente do confirma senha!");
-            erro = true;
-        }
-        if(erro){
-            return;
-        }
-        
-        if(ValidadorUsuario.contemPalavraProibida(login)){
+        if(ValidadorUsuario.contemPalavraProibida(txtLogin.getText())){
             JOptionPane.showMessageDialog(null, "Login contém palavra não permitida.", "ERRO!", 0);
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtLogin.setBorder(border);
             txtLoginErro.setText("<html>Login contém palavra<br> não permitida.</html>");
+            erroPalavraProibidas = true;
+        }
+        
+        
+        erroCompara = ValidadorUsuario.compararSenhaConfirmaSenha(String.valueOf(txtSenha.getPassword()), String.valueOf(txtConfirmarSenha.getPassword()), txtConfirmaSenhaErro);
+        
+        if(erroCompara || erroPalavraProibidas || erroPreenchidos){
             return;
         }
         
         //Armazenando no objeto Usuario.
         Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(nome);
-        novoUsuario.setCpf(cpf);
+        novoUsuario.setNome(txtNome.getText());
+        novoUsuario.setCpf(txtCpf.getText());
         novoUsuario.setGenero(String.valueOf(boxGenero.getSelectedItem()));
-        novoUsuario.setDataNascimento(dataNascimento);
-        novoUsuario.setTelefone(telefone);
+        novoUsuario.setDataNascimento(txtNascimento.getText());
+        novoUsuario.setTelefone(txtTelefone.getText());
         novoUsuario.setCargo(String.valueOf(boxCargo.getSelectedItem()));
-        novoUsuario.setLogin(login);
-        novoUsuario.setSenha(String.valueOf(senha));
+        novoUsuario.setLogin(txtLogin.getText());
+        novoUsuario.setSenha(String.valueOf(txtSenha.getPassword()));
         
         //manda a mensagem que deu certo e fecha a janela.
-        JOptionPane.showMessageDialog(null, "Usuario " + novoUsuario.getNome() + " cadastrado com sucesso!");
+        JOptionPane.showMessageDialog(null, "Usuario " + txtNome.getText()+ " cadastrado com sucesso!");
         TelaCadastro.this.dispose();
     }//GEN-LAST:event_btnCriarContaActionPerformed
 
