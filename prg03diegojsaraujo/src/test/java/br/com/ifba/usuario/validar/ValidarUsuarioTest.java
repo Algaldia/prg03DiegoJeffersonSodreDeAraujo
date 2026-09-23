@@ -2,21 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package br.com.ifba.usuario.entity;
+package br.com.ifba.usuario.validar;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
 import org.junit.jupiter.api.Test;
+import br.com.ifba.usuario.entity.Cargo;
+import br.com.ifba.usuario.entity.Usuario;
 
 import static org.junit.jupiter.api.Assertions.*;
 /**
  *
  * @author guest
  */
-public class UsuarioTest {
+public class ValidarUsuarioTest {
     
     @Test
     public void deveRetornarFalseQuandoNomePreenchido(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "02023355");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
         
         boolean erro = ValidadorUsuario.nomePreenchido(usuarioTeste.getNome());
         
@@ -26,7 +28,7 @@ public class UsuarioTest {
     @Test
     public void deveRetornarFalseQuandoCpfPreenchido(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "02023355");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
         
         boolean erro = ValidadorUsuario.cpfPreenchido(usuarioTeste.getCpf());
         
@@ -36,7 +38,7 @@ public class UsuarioTest {
     @Test
     public void deveRetornarFalseQuandoNascimentoPreenchido(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "02023355");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
         
         boolean erro = ValidadorUsuario.nascimentoPreenchido(usuarioTeste.getDataNascimento());
         
@@ -46,7 +48,7 @@ public class UsuarioTest {
     @Test
     public void deveRetornarFalseQuandoTelefonePreenchido(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "02023355");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
         
         boolean erro = ValidadorUsuario.telefonePreenchido(usuarioTeste.getTelefone());
         
@@ -56,7 +58,7 @@ public class UsuarioTest {
     @Test
     public void deveRetornarFalseQuandologinPreenchido(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "02023355");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
         
         boolean erro = ValidadorUsuario.loginPreenchido(usuarioTeste.getLogin());
         
@@ -66,7 +68,7 @@ public class UsuarioTest {
     @Test
     public void deveRetornarFalseQuandoSenhaPreenchido(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "02023355");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
         
         boolean erro = ValidadorUsuario.senhaPreenchido(usuarioTeste.getSenha());
         
@@ -77,7 +79,7 @@ public class UsuarioTest {
     @Test
     public void deveRetornarFalseQuandoLoginForPalavraProibida(){
         
-        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", "Gerente", "diego", "admin");
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "admin");
         
         boolean erro = ValidadorUsuario.contemPalavraProibida(usuarioTeste.getLogin());
         

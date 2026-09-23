@@ -17,7 +17,7 @@ public class Usuario implements Autenticavel{
     private String genero;
     private String dataNascimento;
     private String telefone;
-    private String cargo;
+    private Cargo cargo;
     private String login;
     private String senha;
     
@@ -25,7 +25,7 @@ public class Usuario implements Autenticavel{
     
     }
     
-    public Usuario(String nome, String cpf, String genero, String dataNascimento, String telefone, String cargo, String login, String senha){
+    public Usuario(String nome, String cpf, String genero, String dataNascimento, String telefone, Cargo cargo, String login, String senha){
         this.nome = nome;
         this.cpf = cpf;
         this.genero =  genero;
@@ -56,7 +56,7 @@ public class Usuario implements Autenticavel{
         return telefone;
     }
 
-    public String getCargo() {
+    public Cargo getCargo() {
         return cargo;
     }
 
@@ -89,7 +89,13 @@ public class Usuario implements Autenticavel{
     }
 
     public void setCargo(String cargo) {
-        this.cargo = cargo;
+        if(cargo.equals("Gerente")){
+            this.cargo = Cargo.GERENTE;
+        } else if(cargo.equals("Estoquista")){
+            this.cargo = Cargo.ESTOQUISTA;
+        } else {
+            this.cargo = Cargo.REPOSITOR;
+        }
     }
 
     public void setLogin(String login) {
