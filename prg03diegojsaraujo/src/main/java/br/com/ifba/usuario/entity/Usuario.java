@@ -21,6 +21,7 @@ public class Usuario extends Pessoa implements Autenticavel{
     
     }
     
+    //adicionaro sobrecarga no contrutor
     public Usuario(String nome, String cpf, String genero, String dataNascimento, String telefone, Cargo cargo, String login, String senha){
         super(nome, cpf, genero, dataNascimento, telefone);
         this.cargo = cargo;
@@ -58,6 +59,7 @@ public class Usuario extends Pessoa implements Autenticavel{
         this.senha = senha;
     }
     
+    @Override
     public boolean autenticar (String login, String senha){
         //retorna a comparação de this.login com login e this.senha com senha.
         return this.login.equals(login) && this.senha.equals(senha);
@@ -67,6 +69,10 @@ public class Usuario extends Pessoa implements Autenticavel{
     public boolean apagarConta(){
         JOptionPane.showMessageDialog(null, "Não é possivel apagar conta");
         return false;
+    }
+    
+    public static boolean processar(Autenticavel pessoa, String login, String senha){
+        return pessoa.autenticar(login, senha);
     }
     
 }
