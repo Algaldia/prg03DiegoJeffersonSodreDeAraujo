@@ -6,6 +6,7 @@ package br.com.ifba.usuario.entity;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.interfaces.Autenticavel;
 /**
  *
  * @author guest
@@ -21,6 +22,12 @@ public class UsuarioTest {
         
         assertFalse(retorno);
         
+    }
+    
+    @Test
+    public void testarCriacaoDeUsuarioAtravesDoObjetoAutenticavel(){
+        Autenticavel pessoa = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "02023355");
+        assertTrue(pessoa.autenticar("diego", "02023355"));
     }
     
 }
