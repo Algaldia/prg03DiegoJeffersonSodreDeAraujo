@@ -12,6 +12,11 @@ public class Produto {
     private String nome;
     private List<Fornecedor> fornecedores;
     private List<TipoDeProduto> tipos;
+    private String dataValidade;
+    private String lote;
+    private int quantidadeEstoque;
+    private String marca;
+    
 
     public Produto() {
         this.fornecedores = new ArrayList<>();
@@ -47,4 +52,39 @@ public class Produto {
     public void adicionarTipo(TipoDeProduto tipo) {
         this.tipos.add(tipo);
     }
+
+    public String getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(String dataValidade) {
+        this.dataValidade = dataValidade;
+    }
+
+    public String getLote() {
+        return lote;
+    }
+
+    public void setLote(String lote) {
+        this.lote = lote;
+    }
+
+    public int getQuantidadeEstoque() {
+        return quantidadeEstoque;
+    }
+
+    public void setQuantidadeEstoque(int quantidadeEstoque) {
+        this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+    
+    
+    
 }

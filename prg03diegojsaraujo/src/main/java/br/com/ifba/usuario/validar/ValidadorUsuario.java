@@ -108,4 +108,16 @@ public class ValidadorUsuario {
         return erro;
     }
     
+    //Usa expressões regulares para validar a String telefone como somente numeros, parenteses e traço
+    //no formato: (74) 99999-8888 ou no formado 74999998888
+    public static boolean validarTelefone(String telefone){
+        return telefone.matches("\\((\\d{2})\\)\\s?(\\d{5})-(\\d{4})") || telefone.matches("(\\d{11})");
+    }
+    
+    //Usa expressões regulares para validar a String cpf como somente numeros, pontos e traços no formato: 
+    //111.222.333-44 ou 11122233344
+    public static boolean validarCpf(String cpf){
+        return cpf.matches("(\\d{3}).(\\d{3}).(\\d{3})-(\\d{2})") || cpf.matches("(\\d{11})");
+    }
+    
 }
