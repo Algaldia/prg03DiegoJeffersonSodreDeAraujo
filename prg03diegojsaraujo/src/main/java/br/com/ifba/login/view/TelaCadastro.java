@@ -268,6 +268,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         boolean erroPreenchidos = false;
         boolean erroPalavraProibidas = false;
         boolean erroCompara = false;
+        boolean erroValidacao = false;
         
         if(ValidadorUsuario.nomePreenchido(txtNome.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
@@ -283,35 +284,35 @@ public class TelaCadastro extends javax.swing.JFrame {
             erroPreenchidos = true;
         }
         
-        if(ValidadorUsuario.nascimentoPreenchido(txtCpf.getText())){
+        if(ValidadorUsuario.nascimentoPreenchido(txtNascimento.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtNascimento.setBorder(border);
             txtNascimentoErro.setText("<html>Data de Nascimento<br> não     pode estar vazio!</html>");
             erroPreenchidos = true;
         }
         
-        if(ValidadorUsuario.telefonePreenchido(txtCpf.getText())){
+        if(ValidadorUsuario.telefonePreenchido(txtTelefone.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtTelefone.setBorder(border);
             txtTelefoneErro.setText("Telefone não pode estar vazio!");
             erroPreenchidos = true;
         }
         
-        if(ValidadorUsuario.loginPreenchido(txtCpf.getText())){
+        if(ValidadorUsuario.loginPreenchido(txtLogin.getText())){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtLogin.setBorder(border);
             txtLoginErro.setText("Login não pode estar vazio!");
             erroPreenchidos = true;
         }
         
-        if(ValidadorUsuario.senhaPreenchido(txtCpf.getText())){
+        if(ValidadorUsuario.senhaPreenchido(String.valueOf(txtSenha.getPassword()))){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtSenha.setBorder(border);
             txtSenhaErro.setText("Senha não pode estar vazio!");
             erroPreenchidos = true;
         }
         
-        if(ValidadorUsuario.confirmaSenhaPreenchido(txtCpf.getText())){
+        if(ValidadorUsuario.confirmaSenhaPreenchido(String.valueOf(txtConfirmarSenha.getPassword()))){
             Border border = BorderFactory.createLineBorder(Color.red, 2);
             txtConfirmarSenha.setBorder(border);
             txtConfirmaSenhaErro.setText("Nome não pode estar vazio!");
@@ -326,10 +327,24 @@ public class TelaCadastro extends javax.swing.JFrame {
             erroPalavraProibidas = true;
         }
         
+        if(ValidadorUsuario.validarTelefone(txtTelefone.getText())){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtTelefone.setBorder(border);
+            txtTelefoneErro.setText("Formato invalido");
+            erroValidacao = true;
+        }
+        
+        if(ValidadorUsuario.validarCpf(txtCpf.getText())){
+            Border border = BorderFactory.createLineBorder(Color.red, 2);
+            txtCpf.setBorder(border);
+            txtCpfErro.setText("Formato invalido");
+            erroValidacao = true;
+        }
+        
         
         erroCompara = ValidadorUsuario.compararSenhaConfirmaSenha(String.valueOf(txtSenha.getPassword()), String.valueOf(txtConfirmarSenha.getPassword()), txtConfirmaSenhaErro);
         
-        if(erroCompara || erroPalavraProibidas || erroPreenchidos){
+        if(erroCompara || erroPalavraProibidas || erroPreenchidos || erroValidacao){
             return;
         }
         

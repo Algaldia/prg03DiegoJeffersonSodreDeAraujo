@@ -86,4 +86,70 @@ public class ValidarUsuarioTest {
         assertFalse(erro);
     }
     
+    @Test
+    public void deveRetornarTrueQuandoValidacaoDoTelefoneEstiverCertaComTodosSimbolosEspaco(){
+        
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "(74) 99199-9365", Cargo.ESTOQUISTA, "diego", "admin");
+        
+        boolean acerto = ValidadorUsuario.validarTelefone(usuarioTeste.getTelefone());
+        
+        assertTrue(acerto);
+        
+    }
+    
+    @Test
+    public void deveRetornarTrueQuandoValidacaoDoTelefoneEstiverCertaComTodosSimbolosSemEspaco(){
+        
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "(74)99199-9365", Cargo.ESTOQUISTA, "diego", "admin");
+        
+        boolean acerto = ValidadorUsuario.validarTelefone(usuarioTeste.getTelefone());
+        
+        assertTrue(acerto);
+        
+    }
+    
+    @Test
+    public void deveRetornarTrueQuandoValidacaoDoTelefoneEstiverCertaSemSimbolos(){
+        
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "74991999365", Cargo.ESTOQUISTA, "diego", "admin");
+        
+        boolean acerto = ValidadorUsuario.validarTelefone(usuarioTeste.getTelefone());
+        
+        assertTrue(acerto);
+        
+    }
+    
+    @Test
+    public void deveRetornarFalseQuandoValidacaoDoTelefoneEstiverErradaComPaRentesesESemTraco(){
+        
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "(74) 991999365", Cargo.ESTOQUISTA, "diego", "admin");
+        
+        boolean erro = ValidadorUsuario.validarTelefone(usuarioTeste.getTelefone());
+        
+        assertFalse(erro);
+        
+    }
+    
+    @Test
+    public void deveRetornarFalseQuandoValidacaoDoTelefoneEstiverErradaSemPaRentesesEComTraco(){
+        
+        Usuario usuarioTeste = new Usuario("Diego", "222-2222", "Masculino", "09/09/1988", "7499199-9365", Cargo.ESTOQUISTA, "diego", "admin");
+        
+        boolean erro = ValidadorUsuario.validarTelefone(usuarioTeste.getTelefone());
+        
+        assertFalse(erro);
+        
+    }
+    
+    @Test
+    public void deveRetornarTrueQuandoValidacaoDoCpfEstiverCertaComSimbolos(){
+        
+        Usuario usuarioTeste = new Usuario("Diego", "111.222.333-44", "Masculino", "09/09/1988", "74991999365", Cargo.ESTOQUISTA, "diego", "admin");
+        
+        boolean acerto = ValidadorUsuario.validarCpf(usuarioTeste.getCpf());
+        
+        assertTrue(acerto);
+        
+    }
+    
 }
