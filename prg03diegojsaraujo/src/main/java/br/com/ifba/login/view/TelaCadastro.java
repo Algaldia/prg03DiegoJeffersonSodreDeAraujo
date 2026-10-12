@@ -4,6 +4,7 @@
  */
 package br.com.ifba.login.view;
 
+import br.com.ifba.usuario.entity.RepositorioUsuarioEmMemoria;
 import br.com.ifba.usuario.validar.ValidadorUsuario;
 import br.com.ifba.usuario.entity.Usuario;
 import java.awt.Color;
@@ -358,6 +359,9 @@ public class TelaCadastro extends javax.swing.JFrame {
         novoUsuario.setCargo(String.valueOf(boxCargo.getSelectedItem()));
         novoUsuario.setLogin(txtLogin.getText());
         novoUsuario.setSenha(String.valueOf(txtSenha.getPassword()));
+        
+        RepositorioUsuarioEmMemoria listaUsuarios = new RepositorioUsuarioEmMemoria();
+        listaUsuarios.cadastrar(novoUsuario);
         
         //manda a mensagem que deu certo e fecha a janela.
         JOptionPane.showMessageDialog(null, "Usuario " + txtNome.getText()+ " cadastrado com sucesso!");
