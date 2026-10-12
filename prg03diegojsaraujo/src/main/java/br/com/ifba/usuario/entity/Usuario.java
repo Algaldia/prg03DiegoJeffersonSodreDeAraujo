@@ -75,4 +75,24 @@ public class Usuario extends Pessoa implements Autenticavel{
         return pessoa.autenticar(login, senha);
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Usuario usuario = (Usuario) o;
+
+        return this.getCpf() != null
+            ? this.getCpf().equals(usuario.getCpf())
+            : usuario.getCpf() == null;
+    }
+    
+    @Override
+    public int hashCode(){
+        return this.getCpf() != null ? this.getCpf().hashCode() : 0;
+    }
+    
 }
