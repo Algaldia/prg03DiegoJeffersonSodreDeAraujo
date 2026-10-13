@@ -4,12 +4,16 @@
  */
 package br.com.ifba.usuario.entity;
 import br.com.ifba.usuario.interfaces.Autenticavel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author guest
  */
+@Entity
+@Table(name = "usuarios")
 public class Usuario extends Pessoa implements Autenticavel{
     
     //Criando atributos da classe
