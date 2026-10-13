@@ -4,29 +4,53 @@
  */
 package br.com.ifba.usuario.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "produtos")
 public class Produto {
-
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long codigo;
+    
+    @Column(name = "nome", nullable = false)
     private String nome;
-    private List<Fornecedor> fornecedores;
-    private List<TipoDeProduto> tipos;
+    
+    //private List<Fornecedor> fornecedores;
+    //private List<TipoDeProduto> tipos;
+    
+    @Column(name = "data_validade")
     private String dataValidade;
+    
+    @Column(name = "lote")
     private String lote;
+    
+    @Column(name = "quantidade_estoque",  nullable = false)
     private int quantidadeEstoque;
+    
+    @Column(name = "marcca")
     private String marca;
     
+    @Column(name = "preco")
+    private float preco;
 
     public Produto() {
-        this.fornecedores = new ArrayList<>();
-        this.tipos = new ArrayList<>();
+        //this.fornecedores = new ArrayList<>();
+        //this.tipos = new ArrayList<>();
     }
 
     public Produto(String nome) {
         this.nome = nome;
-        this.fornecedores = new ArrayList<>();
-        this.tipos = new ArrayList<>();
+        //this.fornecedores = new ArrayList<>();
+        //this.tipos = new ArrayList<>();
     }
 
     public String getNome() {
@@ -37,7 +61,7 @@ public class Produto {
         this.nome = nome;
     }
 
-    public List<Fornecedor> getFornecedores() {
+    /*public List<Fornecedor> getFornecedores() {
         return fornecedores;
     }
 
@@ -51,7 +75,7 @@ public class Produto {
 
     public void adicionarTipo(TipoDeProduto tipo) {
         this.tipos.add(tipo);
-    }
+    }*/
 
     public String getDataValidade() {
         return dataValidade;
@@ -83,6 +107,14 @@ public class Produto {
 
     public void setMarca(String marca) {
         this.marca = marca;
+    }
+
+    public float getPreco() {
+        return preco;
+    }
+
+    public void setPreco(float preco) {
+        this.preco = preco;
     }
     
     
