@@ -4,6 +4,11 @@
  */
 package br.com.ifba.produto.view;
 
+import br.com.ifba.infrastructure.util.JPAUtil;
+import br.com.ifba.usuario.entity.Produto;
+import jakarta.persistence.EntityManager;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author guest
@@ -11,12 +16,23 @@ package br.com.ifba.produto.view;
 public class CadastroProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CadastroProduto.class.getName());
-
+    private int tipo = 0;
     /**
      * Creates new form CadastroProduto
      */
+    
     public CadastroProduto() {
         initComponents();
+    }
+    
+    public CadastroProduto(int tipo) {
+        initComponents();
+        this.tipo = tipo;
+        
+        if (tipo == 1){
+            lblCadastroProduto.setText("ALTERAR PRODUTO");
+            btnCadastrar.setText("ALTERAR");
+        }
     }
 
     /**
@@ -86,6 +102,7 @@ public class CadastroProduto extends javax.swing.JFrame {
 
         btnCadastrar.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(this::btnCadastrarActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,6 +195,25 @@ public class CadastroProduto extends javax.swing.JFrame {
     private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtQuantidadeActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        EntityManager bd = new JPAUtil().retornarEntityManager();
+        bd.getTransaction().begin();
+        
+        Produto produto =  new Produto();
+        produto.setNome(txtNome.getText());
+        produto.setLote(txtLote.getText());
+        produto.setDataValidade(txtValidade.getText());
+        produto.setPreco(Float.parseFloat(txtPreco.getText()));
+        produto.setMarca(txtMarca.getText());
+        produto.setQuantidadeEstoque(Integer.parseInt(txtQuantidade.getText()));
+        
+        bd.persist(produto);
+        bd.getTransaction().commit();
+        bd.close();
+        
+        JOptionPane.showMessageDialog(null, "Produto Cadastrado com sucesso.");
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**
      * @param args the command line arguments

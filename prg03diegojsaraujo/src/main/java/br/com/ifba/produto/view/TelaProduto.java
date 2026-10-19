@@ -4,7 +4,11 @@
  */
 package br.com.ifba.produto.view;
 
+import br.com.ifba.infrastructure.util.JPAUtil;
+import br.com.ifba.usuario.entity.Produto;
+import jakarta.persistence.EntityManager;
 import java.awt.Component;
+import java.util.List;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -30,32 +34,39 @@ public class TelaProduto extends javax.swing.JFrame {
         DefaultTableModel modelo =
             (DefaultTableModel) tblProdutos.getModel();
 
-        modelo.addRow(new Object[]{
-            "Arroz", "10/12/2026", "L001", "Tio João", 10, 25.90, "Remover", "Editar"
-        });
+        EntityManager bd = new JPAUtil().retornarEntityManager();
+        bd.getTransaction().begin();
+        
+        List<Produto> produtos = bd.createQuery(
+            "SELECT u FROM Produto u", Produto.class
+        ).getResultList();
 
-        modelo.addRow(new Object[]{
-            "Feijão", "15/12/2026", "L002", "Camil", 20, 8.50, "Remover", "Editar"
-        });
+        for (Produto produto : produtos) {
+            modelo.addRow(new Object[]{
+                produto.getCodigo(),produto.getNome(), produto.getDataValidade(), produto.getLote(), produto.getMarca(), produto.getQuantidadeEstoque(), produto.getPreco(), "Remover", "Editar"
+            });
+        }
         
         configurarBotoesTabela();
+        
+        bd.close();
     }
 
     
     private void configurarBotoesTabela() {
 
     // Coluna 6: Remover
-    tblProdutos.getColumnModel().getColumn(6)
+    tblProdutos.getColumnModel().getColumn(7)
         .setCellRenderer(new BotaoRenderer());
 
-    tblProdutos.getColumnModel().getColumn(6)
+    tblProdutos.getColumnModel().getColumn(7)
         .setCellEditor(new BotaoEditor(tblProdutos, "Remover"));
 
     // Coluna 7: Editar
-    tblProdutos.getColumnModel().getColumn(7)
+    tblProdutos.getColumnModel().getColumn(8)
         .setCellRenderer(new BotaoRenderer());
 
-    tblProdutos.getColumnModel().getColumn(7)
+    tblProdutos.getColumnModel().getColumn(8)
         .setCellEditor(new BotaoEditor(tblProdutos, "Editar"));
 }
     /**
@@ -76,8 +87,10 @@ public class TelaProduto extends javax.swing.JFrame {
 
         jTextField1.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         jTextField1.setText("Procurar");
+        jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
         jButton1.setText("+");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         tblProdutos.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         tblProdutos.setModel(new javax.swing.table.DefaultTableModel(
@@ -85,7 +98,7 @@ public class TelaProduto extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nome", "Data Validade", "Lote", "Marca", "Quantidade", "Preço", "Remover", "Editar"
+                "codigo", "Nome", "Data Validade", "Lote", "Marca", "Quantidade", "Preço", "Remover", "Editar"
             }
         ));
         tblProdutos.setRowHeight(30);
@@ -119,6 +132,14 @@ public class TelaProduto extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,23 +208,88 @@ class BotaoEditor extends AbstractCellEditor
         botao.addActionListener(e -> {
             int linhaModelo = tabela.convertRowIndexToModel(linha);
 
+            
             if (acao.equals("Remover")) {
                 int resposta = JOptionPane.showConfirmDialog(
                     tabela,
                     "Deseja remover este produto?",
                     "Confirmar remoção",
-                    JOptionPane.YES_NO_OPTION
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
                 );
-
                 if (resposta == JOptionPane.YES_OPTION) {
-                    ((DefaultTableModel) tabela.getModel())
-                        .removeRow(linhaModelo);
+                    EntityManager bd = null;
+
+                    try {
+                        // Recupera o código do produto selecionado
+                        Object codigo = tabela.getModel()
+                                .getValueAt(linhaModelo, 0);
+
+                        bd = new JPAUtil().retornarEntityManager();
+                        bd.getTransaction().begin();
+
+                        // Busca o produto no banco pelo seu ID
+                        Produto produto = bd.find(Produto.class, codigo);
+
+                        if (produto == null) {
+                            bd.getTransaction().rollback();
+
+                            JOptionPane.showMessageDialog(
+                                tabela,
+                                "Produto não encontrado no banco de dados.",
+                                "Aviso",
+                                JOptionPane.WARNING_MESSAGE
+                            );
+
+                            return;
+                        }
+
+                        // Remove o produto do banco
+                        bd.remove(produto);
+
+                        // Confirma a exclusão no banco de dados
+                        bd.getTransaction().commit();
+
+                        // Remove a linha da tabela somente após o commit
+                        ((DefaultTableModel) tabela.getModel())
+                                .removeRow(linhaModelo);
+
+                        JOptionPane.showMessageDialog(
+                            tabela,
+                            "Produto removido com sucesso!",
+                            "Sucesso",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+
+                    } catch (Exception ex) {
+                        if (bd != null
+                                && bd.getTransaction().isActive()) {
+                            bd.getTransaction().rollback();
+                        }
+
+                        JOptionPane.showMessageDialog(
+                            tabela,
+                            "Erro ao remover o produto: " + ex.getMessage(),
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+
+                    } finally {
+                        if (bd != null && bd.isOpen()) {
+                            bd.close();
+                        }
+                    }
                 }
             } else if (acao.equals("Editar")) {
-                JOptionPane.showMessageDialog(
-                    tabela,
-                    "Você clicou em Editar na linha " + (linha + 1)
-                );
+                Produto produto = new Produto();
+                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 1)));
+                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 2)));
+                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 3)));
+                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 4)));
+                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 5)));
+                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 6)));
+                CadastroProduto cadastroProduto = new CadastroProduto(1);
+                cadastroProduto.setVisible(true);
             }
 
             fireEditingStopped();
