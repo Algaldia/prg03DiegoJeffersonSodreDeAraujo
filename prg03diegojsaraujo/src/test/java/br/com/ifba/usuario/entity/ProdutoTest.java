@@ -16,7 +16,7 @@ public class ProdutoTest {
     
     @Test
     public void criandoProdutoEAdicionandoTresFornecedoresEComparandoSeOResultadoETres(){
-        Produto produto = new Produto("Cafe");
+        Produto produto = new Produto();
         Fornecedor fornecedor1 =  new Fornecedor("Atacadao");
         Fornecedor fornecedor2 =  new Fornecedor("Distruidora Fernando");
         Fornecedor fornecedor3 =  new Fornecedor("Cafe Pilão");
@@ -25,5 +25,4 @@ public class ProdutoTest {
         produto.adicionarFornecedor(fornecedor3);
         assertEquals(3, produto.getFornecedores().size());*/
     }
-    
 }

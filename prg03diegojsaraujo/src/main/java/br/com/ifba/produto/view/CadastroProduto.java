@@ -17,6 +17,7 @@ public class CadastroProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CadastroProduto.class.getName());
     private int tipo = 0;
+    Produto modificarProduto = null;
     /**
      * Creates new form CadastroProduto
      */
@@ -25,14 +26,22 @@ public class CadastroProduto extends javax.swing.JFrame {
         initComponents();
     }
     
-    public CadastroProduto(int tipo) {
+    public CadastroProduto(int tipo, Produto produto) {
         initComponents();
         this.tipo = tipo;
         
         if (tipo == 1){
             lblCadastroProduto.setText("ALTERAR PRODUTO");
             btnCadastrar.setText("ALTERAR");
+            this.modificarProduto = produto;
         }
+        
+        txtNome.setText(produto.getNome());
+        txtMarca.setText(produto.getMarca());
+        txtValidade.setText(produto.getDataValidade());
+        txtLote.setText(produto.getLote());
+        txtPreco.setText(String.valueOf(produto.getPreco()));
+        txtQuantidade.setText(String.valueOf(produto.getQuantidadeEstoque()));       
     }
 
     /**
@@ -197,22 +206,89 @@ public class CadastroProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtQuantidadeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        EntityManager bd = new JPAUtil().retornarEntityManager();
-        bd.getTransaction().begin();
-        
-        Produto produto =  new Produto();
-        produto.setNome(txtNome.getText());
-        produto.setLote(txtLote.getText());
-        produto.setDataValidade(txtValidade.getText());
-        produto.setPreco(Float.parseFloat(txtPreco.getText()));
-        produto.setMarca(txtMarca.getText());
-        produto.setQuantidadeEstoque(Integer.parseInt(txtQuantidade.getText()));
-        
-        bd.persist(produto);
-        bd.getTransaction().commit();
-        bd.close();
-        
-        JOptionPane.showMessageDialog(null, "Produto Cadastrado com sucesso.");
+        EntityManager bd = null;
+
+        try {
+            bd = new JPAUtil().retornarEntityManager();
+            bd.getTransaction().begin();
+
+            Produto produto;
+
+            if (tipo == 0) {
+                // Cadastro: cria um novo produto
+                produto = new Produto();
+            } else {
+                // Edição: utiliza o produto existente
+                produto = bd.find(
+                    Produto.class,
+                    modificarProduto.getCodigo()
+                );
+
+                if (produto == null) {
+                    bd.getTransaction().rollback();
+
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Produto não encontrado no banco de dados."
+                    );
+                    return;
+                }
+            }
+
+            // Atualiza os dados com os valores dos campos
+            produto.setNome(txtNome.getText().trim());
+            produto.setLote(txtLote.getText().trim());
+            produto.setDataValidade(txtValidade.getText().trim());
+            produto.setMarca(txtMarca.getText().trim());
+            if(txtPreco.getText().matches("(\\d{1,}).(\\d*)")){
+                produto.setPreco(Float.parseFloat(txtPreco.getText().trim()));
+            }else{
+                throw new PrecoInvalidoException();
+            }
+            produto.setQuantidadeEstoque(
+                Integer.parseInt(txtQuantidade.getText().trim())
+            );
+
+            if (tipo == 0) {
+                bd.persist(produto);
+            }
+
+            bd.getTransaction().commit();
+
+            JOptionPane.showMessageDialog(
+                this,
+                tipo == 0
+                    ? "Produto cadastrado com sucesso!"
+                    : "Produto alterado com sucesso!"
+            );
+
+            dispose();
+
+        } catch (PrecoInvalidoException ex) {
+            JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage(),
+                "Dados inválidos",
+                JOptionPane.WARNING_MESSAGE
+            );
+
+        } catch (Exception ex) {
+            if (bd != null && bd.getTransaction().isActive()) {
+                bd.getTransaction().rollback();
+            }
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Erro ao salvar o produto: " + ex.getMessage(),
+                "Erro",
+                JOptionPane.ERROR_MESSAGE
+            );
+
+        } finally {
+            if (bd != null && bd.isOpen()) {
+                bd.close();
+            }
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**

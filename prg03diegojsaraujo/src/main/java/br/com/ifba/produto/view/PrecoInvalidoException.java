@@ -10,8 +10,8 @@ package br.com.ifba.produto.view;
  */
 public class PrecoInvalidoException extends RuntimeException{
     
-    public PrecoInvalidoException(String preco){
-        super("Preço invalido: " + preco);
+    public PrecoInvalidoException(){
+        super("Preço invalido");
     }
     
 }

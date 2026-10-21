@@ -47,8 +47,8 @@ public class Produto {
         //this.tipos = new ArrayList<>();
     }
 
-    public Produto(String nome) {
-        this.nome = nome;
+    public Produto(long codigo) {
+        this.codigo = codigo;
         //this.fornecedores = new ArrayList<>();
         //this.tipos = new ArrayList<>();
     }
