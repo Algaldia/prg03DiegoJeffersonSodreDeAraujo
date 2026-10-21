@@ -36,7 +36,7 @@ public class Produto {
     @Column(name = "quantidade_estoque",  nullable = false)
     private int quantidadeEstoque;
     
-    @Column(name = "marcca")
+    @Column(name = "marca")
     private String marca;
     
     @Column(name = "preco")
@@ -47,8 +47,8 @@ public class Produto {
         //this.tipos = new ArrayList<>();
     }
 
-    public Produto(String nome) {
-        this.nome = nome;
+    public Produto(long codigo) {
+        this.codigo = codigo;
         //this.fornecedores = new ArrayList<>();
         //this.tipos = new ArrayList<>();
     }
@@ -116,6 +116,11 @@ public class Produto {
     public void setPreco(float preco) {
         this.preco = preco;
     }
+
+    public long getCodigo() {
+        return codigo;
+    }
+    
     
     
     
