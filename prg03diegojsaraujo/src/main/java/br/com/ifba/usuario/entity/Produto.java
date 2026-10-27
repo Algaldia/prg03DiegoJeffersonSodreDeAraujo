@@ -27,6 +27,9 @@ public class Produto {
     //private List<Fornecedor> fornecedores;
     //private List<TipoDeProduto> tipos;
     
+    @Column(name = "eh_visivel")
+    private boolean ehVisivel;
+    
     @Column(name = "data_validade")
     private String dataValidade;
     
@@ -43,12 +46,14 @@ public class Produto {
     private float preco;
 
     public Produto() {
+        ehVisivel = true;
         //this.fornecedores = new ArrayList<>();
         //this.tipos = new ArrayList<>();
     }
 
     public Produto(long codigo) {
         this.codigo = codigo;
+        ehVisivel = true;
         //this.fornecedores = new ArrayList<>();
         //this.tipos = new ArrayList<>();
     }
@@ -119,6 +124,14 @@ public class Produto {
 
     public long getCodigo() {
         return codigo;
+    }
+
+    public boolean isEhVisivel() {
+        return ehVisivel;
+    }
+
+    public void setEhVisivel(boolean ehVisivel) {
+        this.ehVisivel = ehVisivel;
     }
     
     
