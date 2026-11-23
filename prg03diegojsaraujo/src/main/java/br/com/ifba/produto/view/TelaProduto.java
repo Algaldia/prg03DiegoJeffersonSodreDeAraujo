@@ -5,6 +5,7 @@
 package br.com.ifba.produto.view;
 
 import br.com.ifba.infrastructure.util.JPAUtil;
+import br.com.ifba.produto.dao.ProdutoDao;
 import br.com.ifba.usuario.entity.Produto;
 import jakarta.persistence.EntityManager;
 import java.awt.Component;
@@ -28,71 +29,107 @@ public class TelaProduto extends javax.swing.JFrame {
     /**
      * Creates new form TelaProduto
      */
+    
     public TelaProduto() {
         initComponents();
-        
-        DefaultTableModel modelo =
-            (DefaultTableModel) tblProdutos.getModel();
 
-        EntityManager bd = new JPAUtil().retornarEntityManager();
-        bd.getTransaction().begin();
-        
-        List<Produto> produtos = bd.createQuery(
-            "SELECT u FROM Produto u", Produto.class
-        ).getResultList();
-
-        for (Produto produto : produtos) {
-            modelo.addRow(new Object[]{
-                produto.getCodigo(),produto.getNome(), produto.getDataValidade(), produto.getLote(), produto.getMarca(), produto.getQuantidadeEstoque(), produto.getPreco(), "Remover", "Editar"
-            });
-        }
-        
         configurarBotoesTabela();
-        
-        bd.close();
-        
-         /*txtBuscar.getDocument().addDocumentListener(
-        new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(
-                    javax.swing.event.DocumentEvent e) {
-                buscarProdutos();
+        configurarBusca();
+        buscarProdutos();
+    }
+
+    
+    public void buscarProdutos() {
+
+        DefaultTableModel modelo =
+                (DefaultTableModel) tblProdutos.getModel();
+
+        // Limpa os resultados anteriores.
+        modelo.setRowCount(0);
+
+        try {
+            ProdutoDao dao = new ProdutoDao();
+
+            String texto = txtBuscar.getText().trim();
+
+            List<Produto> produtos;
+
+            if (texto.isEmpty()) {
+                // Campo vazio: busca todos os produtos.
+                produtos = dao.findAll();
+
+            } else {
+                // Campo preenchido: busca pelo nome.
+                produtos = dao.findByNome(texto);
             }
 
-            @Override
-            public void removeUpdate(
-                    javax.swing.event.DocumentEvent e) {
-                buscarProdutos();
+            // Adiciona os resultados na tabela.
+            for (Produto produto : produtos) {
+
+                modelo.addRow(new Object[]{
+                    produto.getCodigo(),
+                    produto.getNome(),
+                    produto.getMarca(),
+                    produto.getPreco(),
+                    produto.getQuantidadeEstoque(),
+                    produto.getDataValidade(),
+                    produto.getLote(),
+                    "Remover",
+                    "Editar"
+                });
             }
 
-            @Override
-            public void changedUpdate(
-                    javax.swing.event.DocumentEvent e) {
-                buscarProdutos();
-            }
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Erro ao buscar produtos: " + e.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
-    );
+    }
+    
+    private void configurarBusca() {
 
-    buscarProdutos();*/
+        txtBuscar.getDocument().addDocumentListener(
+            new javax.swing.event.DocumentListener() {
+
+                @Override
+                public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                    buscarProdutos();
+                }
+
+                @Override
+                public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                    buscarProdutos();
+                }
+
+                @Override
+                public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                    buscarProdutos();
+                }
+            }
+        );
     }
 
     
     private void configurarBotoesTabela() {
 
-    // Coluna 6: Remover
-    tblProdutos.getColumnModel().getColumn(7)
-        .setCellRenderer(new BotaoRenderer());
+        // Coluna 6: Remover
+        tblProdutos.getColumnModel().getColumn(7)
+            .setCellRenderer(new BotaoRenderer());
 
-    tblProdutos.getColumnModel().getColumn(7)
-        .setCellEditor(new BotaoEditor(tblProdutos, "Remover"));
+        tblProdutos.getColumnModel().getColumn(7)
+            .setCellEditor(new BotaoEditor(tblProdutos, "Remover"));
 
-    // Coluna 7: Editar
-    tblProdutos.getColumnModel().getColumn(8)
-        .setCellRenderer(new BotaoRenderer());
+        // Coluna 7: Editar
+        tblProdutos.getColumnModel().getColumn(8)
+            .setCellRenderer(new BotaoRenderer());
 
-    tblProdutos.getColumnModel().getColumn(8)
-        .setCellEditor(new BotaoEditor(tblProdutos, "Editar"));
-}
+        tblProdutos.getColumnModel().getColumn(8)
+            .setCellEditor(new BotaoEditor(tblProdutos, "Editar"));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -110,7 +147,6 @@ public class TelaProduto extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         txtBuscar.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        txtBuscar.setText("Procurar");
         txtBuscar.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
@@ -164,56 +200,28 @@ public class TelaProduto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        CadastroProduto cadastro = new CadastroProduto();
+
+        cadastro.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                buscarProdutos();
+            }
+        });
+
+        cadastro.setLocationRelativeTo(null);
+        cadastro.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtBuscarInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtBuscarInputMethodTextChanged
-        if(txtBuscar.getText().equals("")){
-            DefaultTableModel modelo =
-            (DefaultTableModel) tblProdutos.getModel();
-
-            EntityManager bd = new JPAUtil().retornarEntityManager();
-            bd.getTransaction().begin();
-
-            List<Produto> produtos = bd.createQuery(
-                "SELECT u FROM Produto u", Produto.class
-            ).getResultList();
-
-            for (Produto produto : produtos) {
-                modelo.addRow(new Object[]{
-                    produto.getCodigo(),produto.getNome(), produto.getDataValidade(), produto.getLote(), produto.getMarca(), produto.getQuantidadeEstoque(), produto.getPreco(), "Remover", "Editar"
-                });
-            }
-
-            configurarBotoesTabela();
-
-            bd.close();
-        } else {
-            DefaultTableModel modelo =
-            (DefaultTableModel) tblProdutos.getModel();
-
-            EntityManager bd = new JPAUtil().retornarEntityManager();
-            bd.getTransaction().begin();
-
-            List<Produto> produtos = bd.createQuery(
-                "SELECT u FROM Produto u WHERE nome like %" + txtBuscar.getText() + "%", Produto.class
-            ).getResultList();
-
-            for (Produto produto : produtos) {
-                modelo.addRow(new Object[]{
-                    produto.getCodigo(),produto.getNome(), produto.getDataValidade(), produto.getLote(), produto.getMarca(), produto.getQuantidadeEstoque(), produto.getPreco(), "Remover", "Editar"
-                });
-            }
-
-            configurarBotoesTabela();
-
-            bd.close();
-        }
+            
     }//GEN-LAST:event_txtBuscarInputMethodTextChanged
 
     /**
@@ -281,90 +289,86 @@ class BotaoEditor extends AbstractCellEditor
         this.botao = new JButton(acao);
 
         botao.addActionListener(e -> {
+
             int linhaModelo = tabela.convertRowIndexToModel(linha);
 
-            
+            Object valorCodigo = tabela.getModel().getValueAt(linhaModelo, 0);
+            Long codigo = Long.valueOf(valorCodigo.toString());
+
+            ProdutoDao dao = new ProdutoDao();
+
             if (acao.equals("Remover")) {
+
                 int resposta = JOptionPane.showConfirmDialog(
                     tabela,
                     "Deseja remover este produto?",
                     "Confirmar remoção",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE
+                    JOptionPane.YES_NO_OPTION
                 );
+
                 if (resposta == JOptionPane.YES_OPTION) {
-                    EntityManager bd = null;
-
                     try {
-                        // Recupera o código do produto selecionado
-                        Object codigo = tabela.getModel()
-                                .getValueAt(linhaModelo, 0);
+                        Produto produto = dao.findById(codigo);
 
-                        bd = new JPAUtil().retornarEntityManager();
-                        bd.getTransaction().begin();
+                        if (produto != null) {
+                            dao.delete(produto);
 
-                        // Busca o produto no banco pelo seu ID
-                        Produto produto = bd.find(Produto.class, codigo);
-
-                        if (produto == null) {
-                            bd.getTransaction().rollback();
+                            ((DefaultTableModel) tabela.getModel())
+                                    .removeRow(linhaModelo);
 
                             JOptionPane.showMessageDialog(
                                 tabela,
-                                "Produto não encontrado no banco de dados.",
-                                "Aviso",
-                                JOptionPane.WARNING_MESSAGE
+                                "Produto removido com sucesso!"
                             );
-
-                            return;
                         }
-
-                        // Remove o produto do banco
-                        bd.remove(produto);
-
-                        // Confirma a exclusão no banco de dados
-                        bd.getTransaction().commit();
-
-                        // Remove a linha da tabela somente após o commit
-                        ((DefaultTableModel) tabela.getModel())
-                                .removeRow(linhaModelo);
-
-                        JOptionPane.showMessageDialog(
-                            tabela,
-                            "Produto removido com sucesso!",
-                            "Sucesso",
-                            JOptionPane.INFORMATION_MESSAGE
-                        );
 
                     } catch (Exception ex) {
-                        if (bd != null
-                                && bd.getTransaction().isActive()) {
-                            bd.getTransaction().rollback();
-                        }
-
                         JOptionPane.showMessageDialog(
                             tabela,
-                            "Erro ao remover o produto: " + ex.getMessage(),
-                            "Erro",
-                            JOptionPane.ERROR_MESSAGE
+                            "Erro ao remover produto: " + ex.getMessage()
                         );
-
-                    } finally {
-                        if (bd != null && bd.isOpen()) {
-                            bd.close();
-                        }
                     }
                 }
+
             } else if (acao.equals("Editar")) {
-                Produto produto = new Produto(Integer.valueOf(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 0))));
-                produto.setNome(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 1)));
-                produto.setMarca(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 4)));
-                produto.setPreco(Float.valueOf(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 6))));
-                produto.setQuantidadeEstoque(Integer.valueOf(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 5))));
-                produto.setDataValidade(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 2)));
-                produto.setLote(String.valueOf(tabela.getModel().getValueAt(linhaModelo, 3)));
-                CadastroProduto cadastroProduto = new CadastroProduto(1, produto);
-                cadastroProduto.setVisible(true);
+
+                try {
+                    Produto produto = dao.findById(codigo);
+
+                    if (produto != null) {
+
+                        CadastroProduto cadastro =
+                                new CadastroProduto(1, produto);
+
+                        cadastro.addWindowListener(
+                            new java.awt.event.WindowAdapter() {
+                                @Override
+                                public void windowClosed(
+                                        java.awt.event.WindowEvent e) {
+
+                                    // Atualiza a tabela após a edição.
+                                    ((TelaProduto) tabela.getTopLevelAncestor())
+                                            .buscarProdutos();
+                                }
+                            }
+                        );
+
+                        cadastro.setLocationRelativeTo(null);
+                        cadastro.setVisible(true);
+
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                tabela,
+                                "Produto não encontrado."
+                        );
+                    }
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(
+                            tabela,
+                            "Erro ao buscar produto: " + ex.getMessage()
+                    );
+                }
             }
 
             fireEditingStopped();
@@ -385,70 +389,5 @@ class BotaoEditor extends AbstractCellEditor
     public Object getCellEditorValue() {
         return acao;
     }
-    
-    
-    /*private void buscarProdutos() {
-        DefaultTableModel modelo =
-                (DefaultTableModel) tblProdutos.getModel();
-
-        // Remove os resultados anteriores.
-        modelo.setRowCount(0);
-
-        EntityManager bd = new JPAUtil().retornarEntityManager();
-
-        try {
-            String texto = txtBuscar.getText().trim();
-
-            List<Produto> produtos;
-
-            if (texto.isEmpty()) {
-                // Campo vazio: mostra todos os produtos.
-                produtos = bd.createQuery(
-                    "SELECT p FROM Produto p",
-                    Produto.class
-                ).getResultList();
-
-            } else {
-                // Pesquisa produtos cujo nome contém o texto digitado.
-                produtos = bd.createQuery(
-                    "SELECT p FROM Produto p " +
-                    "WHERE LOWER(p.nome) LIKE LOWER(:nome)",
-                    Produto.class
-                )
-                .setParameter("nome", "%" + texto + "%")
-                .getResultList();
-            }
-
-            // Adiciona os resultados à tabela.
-            for (Produto produto : produtos) {
-                modelo.addRow(new Object[]{
-                    produto.getCodigo(),
-                    produto.getNome(),
-                    produto.getMarca(),
-                    produto.getPreco(),
-                    produto.getQuantidadeEstoque(),
-                    produto.getDataValidade(),
-                    produto.getLote(),
-                    "Remover",
-                    "Editar"
-                });
-            }
-
-            configurarBotoesTabela();
-
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(
-                null,
-                "Erro ao buscar produtos: " + e.getMessage(),
-                "Erro",
-                javax.swing.JOptionPane.ERROR_MESSAGE
-            );
-
-        } finally {
-            if (bd.isOpen()) {
-                bd.close();
-            }
-        }
-    }*/
-
 }
+

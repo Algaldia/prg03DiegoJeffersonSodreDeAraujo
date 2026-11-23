@@ -4,8 +4,8 @@
  */
 package br.com.ifba.usuario.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
@@ -15,11 +15,9 @@ import jakarta.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Pessoa {
+public abstract class Pessoa extends PersistenceEntity{
     
     private String nome;
-    
-    @Id
     private String cpf;
     private String genero;
     private String dataNascimento;
