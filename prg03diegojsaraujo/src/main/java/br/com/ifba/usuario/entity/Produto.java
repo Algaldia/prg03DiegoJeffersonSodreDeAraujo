@@ -4,6 +4,7 @@
  */
 package br.com.ifba.usuario.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,11 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "produtos")
-public class Produto {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long codigo;
+public class Produto extends PersistenceEntity{
     
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -51,8 +48,8 @@ public class Produto {
         //this.tipos = new ArrayList<>();
     }
 
-    public Produto(long codigo) {
-        this.codigo = codigo;
+    public Produto(Long codigo) {
+        super(codigo);
         ehVisivel = true;
         //this.fornecedores = new ArrayList<>();
         //this.tipos = new ArrayList<>();
@@ -120,10 +117,6 @@ public class Produto {
 
     public void setPreco(float preco) {
         this.preco = preco;
-    }
-
-    public long getCodigo() {
-        return codigo;
     }
 
     public boolean isEhVisivel() {

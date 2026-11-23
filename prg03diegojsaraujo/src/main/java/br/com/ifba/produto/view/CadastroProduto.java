@@ -4,9 +4,8 @@
  */
 package br.com.ifba.produto.view;
 
-import br.com.ifba.infrastructure.util.JPAUtil;
+import br.com.ifba.produto.dao.ProdutoDao;
 import br.com.ifba.usuario.entity.Produto;
-import jakarta.persistence.EntityManager;
 import javax.swing.JOptionPane;
 
 /**
@@ -206,54 +205,56 @@ public class CadastroProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtQuantidadeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        EntityManager bd = null;
+
 
         try {
-            bd = new JPAUtil().retornarEntityManager();
-            bd.getTransaction().begin();
+
+            // Cria o DAO
+            ProdutoDao dao = new ProdutoDao();
 
             Produto produto;
 
+            // Verifica se é cadastro ou edição
             if (tipo == 0) {
-                // Cadastro: cria um novo produto
                 produto = new Produto();
             } else {
-                // Edição: utiliza o produto existente
-                produto = bd.find(
-                    Produto.class,
-                    modificarProduto.getCodigo()
-                );
+                produto = modificarProduto;
 
                 if (produto == null) {
-                    bd.getTransaction().rollback();
-
                     JOptionPane.showMessageDialog(
                         this,
-                        "Produto não encontrado no banco de dados."
+                        "Produto não encontrado."
                     );
                     return;
                 }
             }
 
-            // Atualiza os dados com os valores dos campos
+            // Preenche os dados do produto
             produto.setNome(txtNome.getText().trim());
             produto.setLote(txtLote.getText().trim());
             produto.setDataValidade(txtValidade.getText().trim());
             produto.setMarca(txtMarca.getText().trim());
-            if(txtPreco.getText().matches("(\\d{1,}).(\\d*)")){
-                produto.setPreco(Float.parseFloat(txtPreco.getText().trim()));
-            }else{
+
+            // Valida e converte o preço
+            String precoTexto = txtPreco.getText().trim();
+
+            if (!precoTexto.matches("\\d+(\\.\\d{1,2})?")) {
                 throw new PrecoInvalidoException();
             }
+
+            produto.setPreco(Float.parseFloat(precoTexto));
+
+            // Converte a quantidade
             produto.setQuantidadeEstoque(
                 Integer.parseInt(txtQuantidade.getText().trim())
             );
 
+            // Salva ou atualiza utilizando o DAO
             if (tipo == 0) {
-                bd.persist(produto);
+                dao.save(produto);
+            } else {
+                dao.update(produto);
             }
-
-            bd.getTransaction().commit();
 
             JOptionPane.showMessageDialog(
                 this,
@@ -265,6 +266,7 @@ public class CadastroProduto extends javax.swing.JFrame {
             dispose();
 
         } catch (PrecoInvalidoException ex) {
+
             JOptionPane.showMessageDialog(
                 this,
                 ex.getMessage(),
@@ -272,10 +274,16 @@ public class CadastroProduto extends javax.swing.JFrame {
                 JOptionPane.WARNING_MESSAGE
             );
 
+        } catch (NumberFormatException ex) {
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Informe um preço e uma quantidade válidos.",
+                "Dados inválidos",
+                JOptionPane.WARNING_MESSAGE
+            );
+
         } catch (Exception ex) {
-            if (bd != null && bd.getTransaction().isActive()) {
-                bd.getTransaction().rollback();
-            }
 
             JOptionPane.showMessageDialog(
                 this,
@@ -283,12 +291,8 @@ public class CadastroProduto extends javax.swing.JFrame {
                 "Erro",
                 JOptionPane.ERROR_MESSAGE
             );
-
-        } finally {
-            if (bd != null && bd.isOpen()) {
-                bd.close();
-            }
         }
+
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**
