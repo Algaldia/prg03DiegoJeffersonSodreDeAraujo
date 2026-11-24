@@ -4,7 +4,10 @@
  */
 package br.com.ifba.produto.view;
 
+import br.com.ifba.produto.controller.ProdutoIController;
 import br.com.ifba.produto.dao.ProdutoDao;
+import br.com.ifba.produto.service.ProdutoIService;
+import br.com.ifba.produto.service.ProdutoService;
 import br.com.ifba.usuario.entity.Produto;
 import javax.swing.JOptionPane;
 
@@ -16,31 +19,35 @@ public class CadastroProduto extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CadastroProduto.class.getName());
     private int tipo = 0;
-    Produto modificarProduto = null;
+    private Produto modificarProduto = null;
+    private final ProdutoIController produtoController;
     /**
      * Creates new form CadastroProduto
      */
     
-    public CadastroProduto() {
+    public CadastroProduto(ProdutoIController produtoController) {
         initComponents();
+        this.produtoController = produtoController;
     }
     
-    public CadastroProduto(int tipo, Produto produto) {
+    public CadastroProduto(int tipo, Produto produto,  ProdutoIController produtoController) {
         initComponents();
         this.tipo = tipo;
+        this.modificarProduto = produto;
+        this.produtoController = produtoController;
         
-        if (tipo == 1){
+        if (tipo == 1 && produto != null){
             lblCadastroProduto.setText("ALTERAR PRODUTO");
             btnCadastrar.setText("ALTERAR");
             this.modificarProduto = produto;
-        }
-        
-        txtNome.setText(produto.getNome());
-        txtMarca.setText(produto.getMarca());
-        txtValidade.setText(produto.getDataValidade());
-        txtLote.setText(produto.getLote());
-        txtPreco.setText(String.valueOf(produto.getPreco()));
-        txtQuantidade.setText(String.valueOf(produto.getQuantidadeEstoque()));       
+            
+            txtNome.setText(produto.getNome());
+            txtMarca.setText(produto.getMarca());
+            txtValidade.setText(produto.getDataValidade());
+            txtLote.setText(produto.getLote());
+            txtPreco.setText(String.valueOf(produto.getPreco()));
+            txtQuantidade.setText(String.valueOf(produto.getQuantidadeEstoque()));
+        }         
     }
 
     /**
@@ -208,9 +215,7 @@ public class CadastroProduto extends javax.swing.JFrame {
 
 
         try {
-
-            // Cria o DAO
-            ProdutoDao dao = new ProdutoDao();
+            // Cria o Service
 
             Produto produto;
 
@@ -222,74 +227,69 @@ public class CadastroProduto extends javax.swing.JFrame {
 
                 if (produto == null) {
                     JOptionPane.showMessageDialog(
-                        this,
-                        "Produto não encontrado."
+                            this,
+                            "Produto não encontrado."
                     );
                     return;
                 }
             }
 
-            // Preenche os dados do produto
+            // Preenche os dados
             produto.setNome(txtNome.getText().trim());
             produto.setLote(txtLote.getText().trim());
             produto.setDataValidade(txtValidade.getText().trim());
             produto.setMarca(txtMarca.getText().trim());
 
-            // Valida e converte o preço
-            String precoTexto = txtPreco.getText().trim();
-
-            if (!precoTexto.matches("\\d+(\\.\\d{1,2})?")) {
-                throw new PrecoInvalidoException();
-            }
-
-            produto.setPreco(Float.parseFloat(precoTexto));
-
-            // Converte a quantidade
-            produto.setQuantidadeEstoque(
-                Integer.parseInt(txtQuantidade.getText().trim())
+            // Converte os valores
+            produto.setPreco(
+                    Float.parseFloat(txtPreco.getText().trim())
             );
 
-            // Salva ou atualiza utilizando o DAO
+            produto.setQuantidadeEstoque(
+                    Integer.parseInt(txtQuantidade.getText().trim())
+            );
+
+            // Salva ou atualiza utilizando o Service
             if (tipo == 0) {
-                dao.save(produto);
+                produtoController.save(produto);
             } else {
-                dao.update(produto);
+                produtoController.update(produto);
             }
 
             JOptionPane.showMessageDialog(
-                this,
-                tipo == 0
-                    ? "Produto cadastrado com sucesso!"
-                    : "Produto alterado com sucesso!"
+                    this,
+                    tipo == 0
+                            ? "Produto cadastrado com sucesso!"
+                            : "Produto alterado com sucesso!"
             );
 
             dispose();
 
-        } catch (PrecoInvalidoException ex) {
-
-            JOptionPane.showMessageDialog(
-                this,
-                ex.getMessage(),
-                "Dados inválidos",
-                JOptionPane.WARNING_MESSAGE
-            );
-
         } catch (NumberFormatException ex) {
 
             JOptionPane.showMessageDialog(
-                this,
-                "Informe um preço e uma quantidade válidos.",
-                "Dados inválidos",
-                JOptionPane.WARNING_MESSAGE
+                    this,
+                    "Informe um preço e uma quantidade válidos.",
+                    "Dados inválidos",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+        } catch (IllegalArgumentException ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    ex.getMessage(),
+                    "Dados inválidos",
+                    JOptionPane.WARNING_MESSAGE
             );
 
         } catch (Exception ex) {
 
             JOptionPane.showMessageDialog(
-                this,
-                "Erro ao salvar o produto: " + ex.getMessage(),
-                "Erro",
-                JOptionPane.ERROR_MESSAGE
+                    this,
+                    "Erro ao salvar o produto: " + ex.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
             );
         }
 
@@ -317,7 +317,7 @@ public class CadastroProduto extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new CadastroProduto().setVisible(true));
+        //java.awt.EventQueue.invokeLater(() -> new CadastroProduto().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
