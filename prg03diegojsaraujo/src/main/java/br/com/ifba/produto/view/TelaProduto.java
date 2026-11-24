@@ -4,10 +4,8 @@
  */
 package br.com.ifba.produto.view;
 
-import br.com.ifba.infrastructure.util.JPAUtil;
-import br.com.ifba.produto.dao.ProdutoDao;
+import br.com.ifba.produto.controller.ProdutoIController;
 import br.com.ifba.usuario.entity.Produto;
-import jakarta.persistence.EntityManager;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.AbstractCellEditor;
@@ -24,14 +22,18 @@ import javax.swing.table.TableCellRenderer;
  */
 public class TelaProduto extends javax.swing.JFrame {
     
+    private final ProdutoIController produtoController;
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaProduto.class.getName());
 
     /**
      * Creates new form TelaProduto
      */
     
-    public TelaProduto() {
+    public TelaProduto(ProdutoIController produtoController) {
         initComponents();
+        
+        this.produtoController = produtoController;
 
         configurarBotoesTabela();
         configurarBusca();
@@ -48,19 +50,14 @@ public class TelaProduto extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         try {
-            ProdutoDao dao = new ProdutoDao();
-
             String texto = txtBuscar.getText().trim();
 
             List<Produto> produtos;
 
             if (texto.isEmpty()) {
-                // Campo vazio: busca todos os produtos.
-                produtos = dao.findAll();
-
+                produtos = produtoController.findAll();
             } else {
-                // Campo preenchido: busca pelo nome.
-                produtos = dao.findByNome(texto);
+                produtos = produtoController.findByNome(texto);
             }
 
             // Adiciona os resultados na tabela.
@@ -121,14 +118,14 @@ public class TelaProduto extends javax.swing.JFrame {
             .setCellRenderer(new BotaoRenderer());
 
         tblProdutos.getColumnModel().getColumn(7)
-            .setCellEditor(new BotaoEditor(tblProdutos, "Remover"));
+        .setCellEditor(new BotaoEditor(tblProdutos, "Remover", produtoController));
 
         // Coluna 7: Editar
         tblProdutos.getColumnModel().getColumn(8)
             .setCellRenderer(new BotaoRenderer());
 
         tblProdutos.getColumnModel().getColumn(8)
-            .setCellEditor(new BotaoEditor(tblProdutos, "Editar"));
+        .setCellEditor(new BotaoEditor(tblProdutos, "Editar", produtoController));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,7 +204,7 @@ public class TelaProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtBuscarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        CadastroProduto cadastro = new CadastroProduto();
+        CadastroProduto cadastro = new CadastroProduto(0, null, produtoController);
 
         cadastro.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -224,30 +221,6 @@ public class TelaProduto extends javax.swing.JFrame {
             
     }//GEN-LAST:event_txtBuscarInputMethodTextChanged
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaProduto().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -282,10 +255,13 @@ class BotaoEditor extends AbstractCellEditor
     private final JTable tabela;
     private final String acao;
     private int linha;
+    private final ProdutoIController produtoController;
 
-    public BotaoEditor(JTable tabela, String acao) {
+    public BotaoEditor(JTable tabela, String acao, ProdutoIController produtoController) {
         this.tabela = tabela;
         this.acao = acao;
+        this.produtoController = produtoController;
+
         this.botao = new JButton(acao);
 
         botao.addActionListener(e -> {
@@ -294,8 +270,6 @@ class BotaoEditor extends AbstractCellEditor
 
             Object valorCodigo = tabela.getModel().getValueAt(linhaModelo, 0);
             Long codigo = Long.valueOf(valorCodigo.toString());
-
-            ProdutoDao dao = new ProdutoDao();
 
             if (acao.equals("Remover")) {
 
@@ -308,13 +282,11 @@ class BotaoEditor extends AbstractCellEditor
 
                 if (resposta == JOptionPane.YES_OPTION) {
                     try {
-                        Produto produto = dao.findById(codigo);
+                        Produto produto = produtoController.findById(codigo);
 
                         if (produto != null) {
-                            dao.delete(produto);
-
-                            ((DefaultTableModel) tabela.getModel())
-                                    .removeRow(linhaModelo);
+                            produtoController.delete(produto);
+                            ((DefaultTableModel) tabela.getModel()).removeRow(linhaModelo);
 
                             JOptionPane.showMessageDialog(
                                 tabela,
@@ -333,12 +305,11 @@ class BotaoEditor extends AbstractCellEditor
             } else if (acao.equals("Editar")) {
 
                 try {
-                    Produto produto = dao.findById(codigo);
+                    Produto produto = produtoController.findById(codigo);
 
                     if (produto != null) {
 
-                        CadastroProduto cadastro =
-                                new CadastroProduto(1, produto);
+                        CadastroProduto cadastro = new CadastroProduto(1, produto, produtoController);
 
                         cadastro.addWindowListener(
                             new java.awt.event.WindowAdapter() {
